@@ -8,7 +8,7 @@ class Normalizer {
   }
 
   private normalize(): void {
-    const hasCarriage = /r\n?/g;
+    const hasCarriage = /\r\n?/g;
     const hasNewLine = /\n$/g;
     const tooManyNewLine = /\n+$/g;
 
