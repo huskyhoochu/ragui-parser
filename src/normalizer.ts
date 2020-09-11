@@ -1,31 +1,23 @@
 class Normalizer {
   private readonly _rawText: string;
-  private _normalized: string;
+  private _normalized: string[];
 
   constructor(text: string) {
     this._rawText = text;
-    this._normalized = '';
+    this._normalized = [];
   }
 
   private normalize(): void {
     const hasCarriage = /\r\n?/g;
-    const hasNewLine = /\n$/g;
     const tooManyNewLine = /\n+$/g;
+    const result = this._rawText
+      .replace(hasCarriage, '\n')
+      .replace(tooManyNewLine, '\n');
 
-    let result = this._rawText.replace(hasCarriage, '\n');
-
-    if (!hasNewLine.test(result)) {
-      result += '\n';
-    }
-
-    if (tooManyNewLine.test(result)) {
-      result = result.replace(tooManyNewLine, '\n');
-    }
-
-    this._normalized = result;
+    this._normalized = result.split('\n');
   }
 
-  public getNormalized(): string {
+  public getNormalized(): string[] {
     this.normalize();
     return this._normalized;
   }
