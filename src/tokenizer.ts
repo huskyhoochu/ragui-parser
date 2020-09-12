@@ -24,7 +24,7 @@ class Tokenizer {
     this._rules = rules;
   }
 
-  tokenize(line: string): Token {
+  public tokenize(line: string): Token {
     const result: Token = {
       type: MDTypes.Paragraph,
       value: line,

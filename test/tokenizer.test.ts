@@ -1,30 +1,9 @@
 import Tokenizer, { MDTypes, Rule } from '../src/tokenizer';
 import Normalizer from '../src/normalizer';
-
-const heading: Rule = {
-  type: MDTypes.Heading,
-  rule: /^#{1,6}\s/,
-};
-const hr: Rule = {
-  type: MDTypes.Hr,
-  rule: /^-{3}/,
-};
-const blockquote: Rule = {
-  type: MDTypes.Blockquote,
-  rule: /^>\s/,
-};
-const ol: Rule = {
-  type: MDTypes.OrderedList,
-  rule: /^\d\.\s/,
-};
-const ul: Rule = {
-  type: MDTypes.UnorderedList,
-  rule: /^[*-]\s/,
-};
+import rules from '../src/rules';
 
 describe('Test tokenizer', () => {
   test('It should make token', () => {
-    const rules = [heading, hr, blockquote, ol, ul];
     const text = `# 애국가
 ---
 
