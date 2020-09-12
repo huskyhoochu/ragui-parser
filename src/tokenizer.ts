@@ -1,9 +1,9 @@
 import { paragraph, Rule } from './rules';
 
-export class Node {
+export class Token {
   private _rule: Rule;
   private _value?: string;
-  private _children?: Node[];
+  private _children?: Token[];
 
   constructor(rule: Rule, value: string) {
     this._rule = rule;
@@ -22,7 +22,7 @@ export class Node {
     return this._children?.length || 0;
   }
 
-  public putChild(node: Node, index: number): void {
+  public putChild(node: Token, index: number): void {
     if (!this._children) {
       this._children = [];
     }
@@ -30,7 +30,7 @@ export class Node {
     this._children.splice(index, 0, node);
   }
 
-  public getChild(index: number): Node {
+  public getChild(index: number): Token {
     if (!this._children) {
       return this;
     }
@@ -46,14 +46,14 @@ class Tokenizer {
     this._rules = rules;
   }
 
-  public tokenize(line: string): Node {
+  public tokenize(line: string): Token {
     this._rules.forEach((rule: Rule) => {
       if (rule.rule.test(line)) {
-        return new Node(rule, line);
+        return new Token(rule, line);
       }
     });
 
-    return new Node(paragraph, line);
+    return new Token(paragraph, line);
   }
 }
 

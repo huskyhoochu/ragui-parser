@@ -1,11 +1,11 @@
 import Tree from '../src/tree';
 import Normalizer from '../src/normalizer';
-import Tokenizer, { Node } from '../src/tokenizer';
+import Tokenizer, { Token } from '../src/tokenizer';
 import rules from '../src/rules';
 
 describe('Test Tree', () => {
   let tree: Tree;
-  let nodes: Node[];
+  let tokens: Token[];
 
   beforeEach(() => {
     const text = `# 애국가
@@ -19,11 +19,11 @@ describe('Test Tree', () => {
 대한사람 대한으로 길이 보전하세`;
     const lines = new Normalizer(text).get();
     const tokenizer = new Tokenizer(rules);
-    nodes = lines.map((line: string) => tokenizer.tokenize(line));
+    tokens = lines.map((line: string) => tokenizer.tokenize(line));
 
     tree = new Tree();
-    nodes.forEach((node: Node, index: number) => {
-      tree.putBlock(node, index);
+    tokens.forEach((token: Token, index: number) => {
+      tree.putBlock(token, index);
     });
   });
 

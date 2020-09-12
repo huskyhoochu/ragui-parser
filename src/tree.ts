@@ -1,35 +1,35 @@
 import { paragraph } from './rules';
-import { Node } from './tokenizer';
+import { Token } from './tokenizer';
 
 class Tree {
-  private readonly _root: Node;
+  private readonly _root: Token;
 
   constructor() {
-    this._root = new Node(paragraph, '');
+    this._root = new Token(paragraph, '');
   }
 
   public size() {
     return this._root.size();
   }
 
-  public get(index: number): Node {
+  public get(index: number): Token {
     return Tree._get(this._root, index);
   }
 
-  private static _get(node: Node, index: number): Node {
-    return node.getChild(index);
+  private static _get(token: Token, index: number): Token {
+    return token.getChild(index);
   }
 
-  private static _put(node: Node, parent: Node, index: number): void {
-    parent.putChild(node, index);
+  private static _put(token: Token, parent: Token, index: number): void {
+    parent.putChild(token, index);
   }
 
-  public putBlock(node: Node, index: number): void {
-    Tree._put(node, this._root, index);
+  public putBlock(token: Token, index: number): void {
+    Tree._put(token, this._root, index);
   }
 
-  public putInline(node: Node, parent: Node, index: number): void {
-    Tree._put(node, parent, index);
+  public putInline(token: Token, parent: Token, index: number): void {
+    Tree._put(token, parent, index);
   }
 }
 
