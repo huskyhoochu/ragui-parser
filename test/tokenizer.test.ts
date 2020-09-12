@@ -1,4 +1,5 @@
-import Tokenizer, { MDTypes, Rule } from '../src/tokenizer';
+import { MDTypes } from '../src/rules';
+import Tokenizer from '../src/tokenizer';
 import Normalizer from '../src/normalizer';
 import rules from '../src/rules';
 
@@ -13,14 +14,10 @@ describe('Test tokenizer', () => {
 * 우리 나라 만세
 > 무궁화 삼천리 화려강산
 대한사람 대한으로 길이 보전하세`;
-    const lines = new Normalizer(text).getNormalized();
+    const lines = new Normalizer(text).get();
     const tokenizer = new Tokenizer(rules);
     const result = lines.map((line: string) => tokenizer.tokenize(line));
 
     expect(result.length).toBe(9);
-    expect(result[0].type).toBe(MDTypes.Heading);
-    expect(result[1].type).toBe(MDTypes.Hr);
-    expect(result[2].type).toBe(MDTypes.Paragraph);
-    expect(result[3].type).toBe(MDTypes.OrderedList);
   });
 });

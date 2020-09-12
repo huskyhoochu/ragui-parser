@@ -1,76 +1,35 @@
-import { Token } from './tokenizer';
-
-interface Node {
-  depth: number;
-  token?: Token;
-  children: Node[];
-  N: number;
-}
-
-export class NodeFactory implements Node {
-  public depth: number;
-  public token?: Token;
-  public children: Node[];
-  public N: number;
-
-  constructor(depth: number, token?: Token) {
-    this.depth = depth;
-    this.token = token;
-    this.children = [];
-    this.N = 0;
-  }
-}
+import { paragraph } from './rules';
+import { Node } from './tokenizer';
 
 class Tree {
-  private _root: Node;
+  private readonly _root: Node;
 
   constructor() {
-    this._root = new NodeFactory(-1);
+    this._root = new Node(paragraph, '');
   }
 
-  public size(): number {
-    return this._size(this._root);
+  public size() {
+    return this._root.size();
   }
 
-  private _size(node: Node): number {
-    return node.N;
+  public get(index: number): Node {
+    return Tree._get(this._root, index);
   }
 
-  public get(depth: number, index: number): Node {
-    return this._get(this._root, depth, index);
+  private static _get(node: Node, index: number): Node {
+    return node.getChild(index);
   }
 
-  private _get(node: Node, depth: number, index: number): Node {
-    const isCorrectDepth = node.depth === depth - 1;
-
-    if (!isCorrectDepth) {
-      node.children.forEach((child: Node) => {
-        this._get(child, depth, index);
-      });
-    }
-
-    return node.children[index];
+  private static _put(node: Node, parent: Node, index: number): void {
+    parent.putChild(node, index);
   }
 
-  public put(node: Node, depth: number, index: number): void {
-    this._put(node, this._root, depth, index);
+  public putBlock(node: Node, index: number): void {
+    Tree._put(node, this._root, index);
   }
 
-  private _add(node: Node, parent: Node, index: number): void {
-    parent.children[index] = node;
-    parent.N += 1;
-  }
-
-  private _put(node: Node, parent: Node, depth: number, index: number): void {
-    const isCorrectDepth = parent.depth === depth - 1;
-
-    if (!isCorrectDepth) {
-      parent.children.forEach((child: Node) => {
-        this._put(node, child, depth, index);
-      });
-    }
-
-    this._add(node, parent, index);
+  public putInline(node: Node, parent: Node, index: number): void {
+    Tree._put(node, parent, index);
   }
 }
 

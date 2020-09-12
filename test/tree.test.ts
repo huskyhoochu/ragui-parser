@@ -1,11 +1,11 @@
-import Tree, { NodeFactory } from '../src/tree';
+import Tree from '../src/tree';
 import Normalizer from '../src/normalizer';
-import Tokenizer, { Token } from '../src/tokenizer';
+import Tokenizer, { Node } from '../src/tokenizer';
 import rules from '../src/rules';
 
 describe('Test Tree', () => {
   let tree: Tree;
-  let tokens: Token[];
+  let nodes: Node[];
 
   beforeEach(() => {
     const text = `# 애국가
@@ -17,22 +17,21 @@ describe('Test Tree', () => {
 * 우리 나라 만세
 > 무궁화 삼천리 화려강산
 대한사람 대한으로 길이 보전하세`;
-    const lines = new Normalizer(text).getNormalized();
+    const lines = new Normalizer(text).get();
     const tokenizer = new Tokenizer(rules);
-    tokens = lines.map((line: string) => tokenizer.tokenize(line));
+    nodes = lines.map((line: string) => tokenizer.tokenize(line));
 
     tree = new Tree();
-    tokens.forEach((line: Token, index: number) => {
-      const node = new NodeFactory(0, line);
-      tree.put(node, 0, index);
+    nodes.forEach((node: Node, index: number) => {
+      tree.putBlock(node, index);
     });
   });
 
   test('It should put item', () => {
-    expect(tree.size()).toBe(tokens.length);
+    expect(tree.size()).toBe(9);
   });
 
   test('It should get Item', () => {
-    expect(tree.get(0, 3).token?.value).toBe('1. 동해물과 백두산이');
+    expect(tree.get(8).get()).toBe('대한사람 대한으로 길이 보전하세');
   });
 });

@@ -1,20 +1,42 @@
-export enum MDTypes {
-  Heading,
-  Paragraph,
-  OrderedList,
-  UnorderedList,
-  Hr,
-  Blockquote,
-}
+import { paragraph, Rule } from './rules';
 
-export interface Rule {
-  type: MDTypes;
-  rule: RegExp;
-}
+export class Node {
+  private _rule: Rule;
+  private _value?: string;
+  private _children?: Node[];
 
-export interface Token {
-  type: MDTypes;
-  value: string;
+  constructor(rule: Rule, value: string) {
+    this._rule = rule;
+    this._value = value;
+  }
+
+  public put(value: string): void {
+    this._value = value;
+  }
+
+  public get(): string {
+    return this._value || '';
+  }
+
+  public size(): number {
+    return this._children?.length || 0;
+  }
+
+  public putChild(node: Node, index: number): void {
+    if (!this._children) {
+      this._children = [];
+    }
+
+    this._children.splice(index, 0, node);
+  }
+
+  public getChild(index: number): Node {
+    if (!this._children) {
+      return this;
+    }
+
+    return this._children[index];
+  }
 }
 
 class Tokenizer {
@@ -24,19 +46,14 @@ class Tokenizer {
     this._rules = rules;
   }
 
-  public tokenize(line: string): Token {
-    const result: Token = {
-      type: MDTypes.Paragraph,
-      value: line,
-    };
-
+  public tokenize(line: string): Node {
     this._rules.forEach((rule: Rule) => {
       if (rule.rule.test(line)) {
-        result.type = rule.type;
+        return new Node(rule, line);
       }
     });
 
-    return result;
+    return new Node(paragraph, line);
   }
 }
 

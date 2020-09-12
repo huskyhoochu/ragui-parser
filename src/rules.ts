@@ -1,23 +1,51 @@
-import { MDTypes, Rule } from './tokenizer';
+export const enum MDTypes {
+  Heading,
+  Paragraph,
+  OrderedList,
+  UnorderedList,
+  Hr,
+  Blockquote,
+}
 
-const heading: Rule = {
-  type: MDTypes.Heading,
+export interface Rule {
+  name: MDTypes;
+  type: 'inline' | 'block';
+  rule: RegExp;
+}
+
+export const paragraph: Rule = {
+  name: MDTypes.Paragraph,
+  type: 'block',
+  rule: /.+/,
+};
+
+export const heading: Rule = {
+  name: MDTypes.Heading,
+  type: 'block',
   rule: /^#{1,6}\s/,
 };
-const hr: Rule = {
-  type: MDTypes.Hr,
+
+export const hr: Rule = {
+  name: MDTypes.Hr,
+  type: 'block',
   rule: /^-{3}/,
 };
-const blockquote: Rule = {
-  type: MDTypes.Blockquote,
+
+export const blockquote: Rule = {
+  name: MDTypes.Blockquote,
+  type: 'block',
   rule: /^>\s/,
 };
-const ol: Rule = {
-  type: MDTypes.OrderedList,
+
+export const ol: Rule = {
+  name: MDTypes.OrderedList,
+  type: 'block',
   rule: /^\d\.\s/,
 };
-const ul: Rule = {
-  type: MDTypes.UnorderedList,
+
+export const ul: Rule = {
+  name: MDTypes.UnorderedList,
+  type: 'block',
   rule: /^[*-]\s/,
 };
 
