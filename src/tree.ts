@@ -1,14 +1,14 @@
-import { paragraph } from './rules';
+import { MDTypes, ruleFactory } from './rules';
 import { Token } from './tokenizer';
 
 class Tree {
   private readonly _root: Token;
 
   constructor() {
-    this._root = new Token(paragraph, '');
+    this._root = new Token(ruleFactory.create(MDTypes.Paragraph), '');
   }
 
-  public size() {
+  public size(): number {
     return this._root.size();
   }
 
@@ -24,12 +24,21 @@ class Tree {
     parent.putChild(token, index);
   }
 
-  public putBlock(token: Token, index: number): void {
+  public put(token: Token, index: number): void {
     Tree._put(token, this._root, index);
   }
 
-  public putInline(token: Token, parent: Token, index: number): void {
-    Tree._put(token, parent, index);
+  public show(): string {
+    let result = '';
+
+    if (this._root.children) {
+      for (let i = 0; i < this._root.size(); i++) {
+        const html = this._root.children[i].getHtml();
+        result = result + html;
+      }
+    }
+
+    return result;
   }
 }
 

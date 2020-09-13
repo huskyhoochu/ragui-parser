@@ -29,4 +29,25 @@ describe('Test Normalize', () => {
       '',
     ]);
   });
+
+  test('It should check shouldUpdate', () => {
+    const prev = '안녕하세요\n';
+    const next = '안녕히가세요\n';
+
+    const normalizer = new Normalizer(prev);
+    expect(normalizer.shouldUpdate(next)).toBeTruthy();
+    expect(normalizer.shouldUpdate(prev)).toBeFalsy();
+  });
+
+  test('It should make updateNext', () => {
+    const prev = '안녕하세요\n';
+    const next = '안녕히가세요\n';
+
+    const normalizer = new Normalizer(prev);
+    if (normalizer.shouldUpdate(next)) {
+      normalizer.updateNext();
+    }
+
+    expect(normalizer.get()).toStrictEqual(['안녕히가세요', '']);
+  });
 });

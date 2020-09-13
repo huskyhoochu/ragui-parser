@@ -1,11 +1,10 @@
-import { MDTypes } from '../src/rules';
 import Tokenizer from '../src/tokenizer';
 import Normalizer from '../src/normalizer';
-import rules from '../src/rules';
+import { rulesBlock, rulesInline } from '../src/rules';
 
 describe('Test tokenizer', () => {
   test('It should make token', () => {
-    const text = `# 애국가
+    const text = `## 애국가
 ---
 
 1. 동해물과 백두산이
@@ -13,11 +12,13 @@ describe('Test tokenizer', () => {
 - 하느님이 보우하사
 * 우리 나라 만세
 > 무궁화 삼천리 화려강산
-대한사람 대한으로 길이 보전하세`;
-    const lines = new Normalizer(text).get();
-    const tokenizer = new Tokenizer(rules);
-    const result = lines.map((line: string) => tokenizer.tokenize(line));
+대한사람 대한으로 길이 보전하세
 
-    expect(result.length).toBe(9);
+2. 남산 위의 *저 소나무* 철갑을 두른 듯`;
+    const lines = new Normalizer(text).get();
+    const tokenizer = new Tokenizer(rulesBlock, rulesInline);
+    const tokens = tokenizer.tokenize(lines);
+
+    expect(tokens.length).toBe(11);
   });
 });

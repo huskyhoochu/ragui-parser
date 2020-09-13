@@ -21,7 +21,7 @@ class Normalizer {
 
   public shouldUpdate(next: string): boolean {
     this._next = next;
-    return this._prev === this._next;
+    return this._prev !== this._next;
   }
 
   public updateNext(): void {
