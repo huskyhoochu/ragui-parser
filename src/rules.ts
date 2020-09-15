@@ -7,6 +7,7 @@ export const enum MDTypes {
   Blockquote,
   Strong,
   Em,
+  Strike,
   Link,
   Img,
 }
@@ -72,6 +73,12 @@ class Em implements Rule {
   parse = (line: string) => line.replace(this.rule, '<em>$2</em>');
 }
 
+class Strike implements Rule {
+  name = MDTypes.Strike;
+  rule = /(~~)(.+)\1/;
+  parse = (line: string) => line.replace(this.rule, '<strike>$2</strike>');
+}
+
 class Link implements Rule {
   name = MDTypes.Link;
   rule = /\[(.*)\]\((.*)\)/;
@@ -116,6 +123,8 @@ class RuleFactory {
         return new Em();
       case MDTypes.Strong:
         return new Strong();
+      case MDTypes.Strike:
+        return new Strike();
       case MDTypes.Link:
         return new Link();
       case MDTypes.Img:
@@ -139,6 +148,7 @@ export const rulesBlock = ((): rule[] => [
 export const rulesInline = ((): rule[] => [
   ruleFactory.create(MDTypes.Strong),
   ruleFactory.create(MDTypes.Em),
+  ruleFactory.create(MDTypes.Strike),
   ruleFactory.create(MDTypes.Img),
   ruleFactory.create(MDTypes.Link),
 ])();
