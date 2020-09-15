@@ -18,7 +18,8 @@ describe('Test Tree', () => {
 > 무궁화 삼천리 화려강산
 대한사람 대한으로 길이 보전하세
 
-2. 남산 위의 *저 소나무* 철갑을 두른 듯`;
+2. 남산 위의 *저 소나무* 철갑을 두른 듯
+`;
     const lines = new Normalizer(text).get();
     const tokenizer = new Tokenizer(rulesBlock, rulesInline);
     tokens = tokenizer.tokenize(lines);
@@ -30,7 +31,7 @@ describe('Test Tree', () => {
   });
 
   test('It should put item', () => {
-    expect(tree.size()).toBe(11);
+    expect(tree.size()).toBe(12);
   });
 
   test('It should get item', () => {
@@ -48,7 +49,7 @@ describe('Test Tree', () => {
 
   test('It should show tree', () => {
     const html =
-      '<h2>애국가</h2><hr/><p></p><ol><li>동해물과 백두산이</li></ol><ol><li>마르고 닳도록</li></ol><ul><li>하느님이 보우하사</li></ul><ul><li>우리 나라 만세</li></ul><blockquote>무궁화 삼천리 화려강산</blockquote><p>대한사람 대한으로 길이 보전하세</p><p></p><ol><li>남산 위의 <em>저 소나무</em> 철갑을 두른 듯</li></ol>';
+      '<h2>애국가</h2><hr/><p></p><ol><li>동해물과 백두산이</li><li>마르고 닳도록</li></ol><ul><li>하느님이 보우하사</li><li>우리 나라 만세</li></ul><blockquote>무궁화 삼천리 화려강산</blockquote><p>대한사람 대한으로 길이 보전하세</p><p></p><ol><li>남산 위의 <em>저 소나무</em> 철갑을 두른 듯</li></ol><p></p>';
     expect(tree.show()).toBe(html);
   });
 });

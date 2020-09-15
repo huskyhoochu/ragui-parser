@@ -49,13 +49,13 @@ class Blockquote implements Rule {
 class Ol implements Rule {
   name = MDTypes.OrderedList;
   rule = /^\d+\.\s(.*)/;
-  parse = (line: string) => line.replace(this.rule, '<ol><li>$1</li></ol>');
+  parse = (line: string) => line.replace(this.rule, '<li>$1</li>');
 }
 
 class Ul implements Rule {
   name = MDTypes.UnorderedList;
   rule = /^[*-]\s(.*)/;
-  parse = (line: string) => line.replace(this.rule, '<ul><li>$1</li></ul>');
+  parse = (line: string) => line.replace(this.rule, '<li>$1</li>');
 }
 
 class Strong implements Rule {

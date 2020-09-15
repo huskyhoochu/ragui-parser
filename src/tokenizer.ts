@@ -1,7 +1,7 @@
 import { MDTypes, rule, ruleFactory } from './rules';
 
 export class Token {
-  private _rule: rule;
+  private readonly _rule: rule;
   private _value: string;
   private _html: string;
   public children?: Token[];
@@ -13,12 +13,16 @@ export class Token {
     this.setHtml(this._rule.parse(this.getValue()));
   }
 
-  public put(value: string): void {
-    this._value = value;
+  public getRule(): rule {
+    return this._rule;
   }
 
   public getValue(): string {
     return this._value;
+  }
+
+  public setValue(value: string): void {
+    this._value = value;
   }
 
   public getHtml(): string {
@@ -79,7 +83,57 @@ class Tokenizer {
   }
 
   public tokenize(lines: string[]): Token[] {
-    const tokens = lines.map((line: string) => this._parseBlock(line));
+    let tokens = lines.map((line: string) => this._parseBlock(line));
+    tokens = tokens.map((token: Token, i: number, arr: Token[]) => {
+      if (
+        i - 1 >= 0 &&
+        token.getRule().name === MDTypes.OrderedList &&
+        arr[i - 1].getRule().name !== MDTypes.OrderedList
+      ) {
+        const olStart = '<ol>';
+        token.setHtml(olStart + token.getHtml());
+      }
+
+      if (i === 0 && token.getRule().name === MDTypes.OrderedList) {
+        const olStart = '<ol>';
+        token.setHtml(olStart + token.getHtml());
+      }
+
+      if (
+        i + 1 < lines.length &&
+        token.getRule().name === MDTypes.OrderedList &&
+        arr[i + 1].getRule().name !== MDTypes.OrderedList
+      ) {
+        const olEnd = '</ol>';
+        token.setHtml(token.getHtml() + olEnd);
+      }
+
+      if (
+        i - 1 >= 0 &&
+        token.getRule().name === MDTypes.UnorderedList &&
+        arr[i - 1].getRule().name !== MDTypes.UnorderedList
+      ) {
+        const ulStart = '<ul>';
+        token.setHtml(ulStart + token.getHtml());
+      }
+
+      if (
+        i + 1 < lines.length &&
+        token.getRule().name === MDTypes.UnorderedList &&
+        arr[i + 1].getRule().name !== MDTypes.UnorderedList
+      ) {
+        const ulEnd = '</ul>';
+        token.setHtml(token.getHtml() + ulEnd);
+      }
+
+      if (i === 0 && token.getRule().name === MDTypes.UnorderedList) {
+        const ulStart = '<ul>';
+        token.setHtml(ulStart + token.getHtml());
+      }
+
+      return token;
+    });
+
     tokens.forEach((token: Token) => this._parseInline(token));
     return tokens;
   }
