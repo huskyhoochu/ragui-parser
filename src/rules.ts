@@ -8,6 +8,7 @@ export const enum MDTypes {
   Strong,
   Em,
   Link,
+  Img,
 }
 
 export interface Rule {
@@ -77,6 +78,13 @@ class Link implements Rule {
   parse = (line: string) => line.replace(this.rule, '<a href="$2">$1</a>');
 }
 
+class Img implements Rule {
+  name = MDTypes.Link;
+  rule = /!\[(.*)\]\((.*)\)/;
+  parse = (line: string) =>
+    line.replace(this.rule, '<img src="$2" alt="$1" />');
+}
+
 export type rule =
   | Ul
   | Paragraph
@@ -86,7 +94,8 @@ export type rule =
   | Blockquote
   | Em
   | Strong
-  | Link;
+  | Link
+  | Img;
 
 class RuleFactory {
   public create(type: MDTypes): rule {
@@ -109,6 +118,8 @@ class RuleFactory {
         return new Strong();
       case MDTypes.Link:
         return new Link();
+      case MDTypes.Img:
+        return new Img();
       default:
         return new Paragraph();
     }
@@ -128,5 +139,6 @@ export const rulesBlock = ((): rule[] => [
 export const rulesInline = ((): rule[] => [
   ruleFactory.create(MDTypes.Strong),
   ruleFactory.create(MDTypes.Em),
+  ruleFactory.create(MDTypes.Img),
   ruleFactory.create(MDTypes.Link),
 ])();
