@@ -7,6 +7,7 @@ export const enum MDTypes {
   Blockquote,
   Strong,
   Em,
+  Link,
 }
 
 export interface Rule {
@@ -70,6 +71,12 @@ class Em implements Rule {
   parse = (line: string) => line.replace(this.rule, '<em>$2</em>');
 }
 
+class Link implements Rule {
+  name = MDTypes.Link;
+  rule = /\[(.*)\]\((.*)\)/;
+  parse = (line: string) => line.replace(this.rule, '<a href="$2">$1</a>');
+}
+
 export type rule =
   | Ul
   | Paragraph
@@ -78,7 +85,8 @@ export type rule =
   | Heading
   | Blockquote
   | Em
-  | Strong;
+  | Strong
+  | Link;
 
 class RuleFactory {
   public create(type: MDTypes): rule {
@@ -99,6 +107,8 @@ class RuleFactory {
         return new Em();
       case MDTypes.Strong:
         return new Strong();
+      case MDTypes.Link:
+        return new Link();
       default:
         return new Paragraph();
     }
@@ -118,4 +128,5 @@ export const rulesBlock = ((): rule[] => [
 export const rulesInline = ((): rule[] => [
   ruleFactory.create(MDTypes.Strong),
   ruleFactory.create(MDTypes.Em),
+  ruleFactory.create(MDTypes.Link),
 ])();
